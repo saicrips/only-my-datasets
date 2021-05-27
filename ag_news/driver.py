@@ -8,11 +8,14 @@ BASE_PATH = os.path.dirname(__file__)
 TRAIN_PATH = os.path.join(BASE_PATH, 'dataset/train.csv')
 TEST_PATH = os.path.join(BASE_PATH, 'dataset/test.csv')
 
-def load_train_data():
+def load_train_data(numpy=True):
     """ag_newsの学習用データを出力する
 
     ag_newsの学習用データの組を出力する
     ラベルの説明 1 World, 2 Sports, 3 Business, 4 Sci/Tech
+
+    Args:
+        bool: numpyとして出力するか
 
     Returns:
         ([string], [int]): (学習用データ, ラベル)
@@ -29,13 +32,19 @@ def load_train_data():
             train_data.append(text)
             train_label_data.append(int(row[0]))
 
+    if numpy:
+        return (np.array(train_data), np.array(train_label_data))
+
     return (train_data, train_label_data)
 
-def load_test_data():
+def load_test_data(numpy=True):
     """ag_newsのテスト用データを出力する
 
     ag_newsのテスト用データの組を出力する
     ラベルの説明 1 World, 2 Sports, 3 Business, 4 Sci/Tech
+
+    Args:
+        bool: numpyとして出力するか
 
     Returns:
         ([string], [int]): (テスト用データ, ラベル)
@@ -52,19 +61,50 @@ def load_test_data():
             test_data.append(text)
             test_label_data.append(int(row[0]))
 
+    if numpy:
+        return (np.array(test_data), np.array(test_label_data))
+
     return (test_data, test_label_data)
 
-def load_data():
+def load_data(numpy=True):
     """ag_newsの学習用テスト用データを出力する
 
     ag_newsの学習用テスト用データの組を出力する
     ラベルの説明 1 World, 2 Sports, 3 Business, 4 Sci/Tech
 
+    Args:
+        bool: numpyとして出力するか
+        
     Returns:
         ([string], [int]), ([string], [int]): (学習用データ, ラベル),  (テスト用データ, ラベル)
     """
+    train_data = []
+    train_label_data = []
+    with open(TRAIN_PATH, 'r', encoding='utf-8') as f:
+        texts = csv.reader(f, delimiter=',', quotechar='"')
+        for row in texts:
+            text = ""
+            for s in row[1:]:
+                    text = text + " " + re.sub("^\s*(.-)\s*$", "%1", s).replace("\\n", "\n")
+            train_data.append(text)
+            train_label_data.append(int(row[0]))
 
-    return load_train_data(), load_test_data()
+    test_data = []
+    test_label_data = []
+    with open(TEST_PATH, 'r', encoding='utf-8') as f:
+        texts = csv.reader(f, delimiter=',', quotechar='"')
+        for row in texts:
+            text = ""
+            for s in row[1:]:
+                    text = text + " " + re.sub("^\s*(.-)\s*$", "%1", s).replace("\\n", "\n")
+            test_data.append(text)
+            test_label_data.append(int(row[0]))
+
+
+    if numpy:
+        return (np.array(train_data), np.array(train_label_data)), (np.array(test_data), np.array(test_label_data))
+
+    return (train_data, train_label_data), (test_data, test_label_data)
 
 if __name__=='__main__':
     (x_train, y_train), (x_test, y_test) = load_data()
