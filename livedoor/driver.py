@@ -150,6 +150,6 @@ def data_load(for_train=True, data_size=500):
         
 
 if __name__ == '__main__':
-    train_data = data_load(for_train=False)
-    # for i in range(10):
-    #     print(train_data[i])
+    train_data = data_load(for_train)
+    for i in range(10):
+        print(train_data[i])
