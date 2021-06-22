@@ -11,8 +11,9 @@ TEST_PATH = os.path.join(BASE_PATH, 'dataset/test.tsv')
 DEV_PATH = os.path.join(BASE_PATH, 'dataset/dev.tsv')
 
 
-def load_data(num_words=100000, is_id=True):
+def load_data(num_words=14817, is_id=True):
     """sst-2の学習用とテスト用(devファイル)データを出力する
+    最大語彙数は14817
 
     sst-2の学習用データの組を出力する
     ラベルの説明 0 bad, 1 good
@@ -21,7 +22,7 @@ def load_data(num_words=100000, is_id=True):
         bool: numpyとして出力するか
         
     Returns:
-        ([string], [int]), ([string], [int]): (学習用データ, ラベル),  (テスト用データ, ラベル), word2id, id2word
+        ([string], [int]), ([string], [int]): (学習用データ, ラベル),  (テスト用データ, ラベル), vocab, word2id, id2word
     """
     
     train_text_data = []
@@ -81,10 +82,10 @@ def load_data(num_words=100000, is_id=True):
     
 
 if __name__=='__main__':
-    (x_train, y_train), (x_test, y_test), vocab, word2id, id2word= load_data(num_words=10000)
-
-    print(len(vocab))
+    (x_train, y_train), (x_test, y_test), vocab, word2id, id2word= load_data(num_words=100000)
 
     for i in range(10):
         print("train: {} => label: {}".format(x_train[i], y_train[i]))
         print("test: {} => label: {}".format(x_test[i], y_test[i]))
+
+    print(len(vocab))
